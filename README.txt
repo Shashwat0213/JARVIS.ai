@@ -3,40 +3,14 @@ JARVIS AI V1
 
 ARCHITECTURE
 ------------
-Frontend (GitHub Pages)  : index.html, style.css, app.js
-Backend  (Render)        : server.js, package.json
-Auth + Database          : Firebase Auth + Firestore
+Frontend (GitHub Pages) : index.html, style.css, app.js, sw.js, manifest.webmanifest, icons/
+Backend  (Render)       : server.js, package.json, package-lock.json
+AI providers            : Groq (primary) -> Gemini (fallback)
+Chat history            : saved on the user's device (localStorage), no database.
 
 SETUP INSTRUCTIONS
 ------------------
-
-1. Firebase Setup
-   - Firebase Console > Authentication > Sign-in method > Google enable karein.
-   - Authentication > Settings > Authorized domains mein add karein:
-       * shashwat0213.github.io
-       * localhost (development ke liye)
-   - Firestore Database > Create database (production mode).
-   - Firestore > Rules mein neeche wale rules paste karein:
-
-     rules_version = '2';
-     service cloud.firestore {
-       match /databases/{database}/documents {
-         match /users/{userId} {
-           allow read, write: if request.auth != null
-                              && request.auth.uid == userId;
-         }
-       }
-     }
-
-2. Google Cloud Console (API Restrictions)
-   - https://console.cloud.google.com/apis/credentials kholein.
-   - Firebase API key select karein (jo app.js mein hai).
-   - Application restrictions > HTTP referrers:
-       * https://shashwat0213.github.io/*
-       * http://localhost:*
-   - API restrictions:
-       * Sirf Firebase se related APIs allow karein.
-       * Generative Language API (Gemini) ko ALLOW NA karein.
+(Firebase is no longer used.)
 
 3. Render Backend Setup
    - render.com par new Web Service banayein.
@@ -48,7 +22,10 @@ SETUP INSTRUCTIONS
        Runtime        : Node
        Instance Type  : Free
    - Environment tab mein add karein:
-       GEMINI_API_KEY = apni Gemini key (aistudio.google.com/apikey se)
+       GROQ_API_KEY   = Groq key (console.groq.com)
+       GEMINI_API_KEY = Gemini key (aistudio.google.com/apikey)
+       (optional) GEMINI_MODELS = gemini-2.5-flash,gemini-2.5-flash-lite
+       (optional) EXTRA_ORIGINS = https://your-other-site.com
    - Deploy karein.
 
 4. Frontend Update
@@ -97,3 +74,9 @@ NOTES
 - Voice recognition Chrome/Edge mein sabse acche se kaam karta hai.
 
 Powered by SHASHWAT
+
+PWA / INSTALL
+-------------
+- Open the GitHub Pages URL in Chrome/Edge (Android, desktop): "Install app" button appears in the header.
+- iPhone: Safari > Share > Add to Home Screen (button shows these steps).
+- After changing frontend files, bump CACHE in sw.js ("jarvis-v2" -> "jarvis-v3") so installed apps update.
